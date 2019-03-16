@@ -64,12 +64,12 @@ public class UnitTableModel extends TableModel<Unit> {
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 
-//		switch (columnIndex) {
-//		case ID:
-//			return false;
-//		case DESCRIPTION:
-//			return true;
-//		}
+		// switch (columnIndex) {
+		// case ID:
+		// return false;
+		// case DESCRIPTION:
+		// return true;
+		// }
 		return false;
 	}
 
@@ -112,6 +112,14 @@ public class UnitTableModel extends TableModel<Unit> {
 	@Override
 	public Long getTotalItens() {
 		return service.count();
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		if (data.isEmpty()) {
+			return Object.class;
+		}
+		return getValueAt(0, columnIndex).getClass();
 	}
 
 }

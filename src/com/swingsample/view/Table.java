@@ -32,6 +32,10 @@ public class Table extends JTable {
 	public Integer getPageSize() {
 		return this.model.getLimit();
 	}
+	
+	public Object get(int rowIndex){
+		return this.model.get(rowIndex);
+	}
 
 	public void setColumnsWidth(int tablePreferredWidth, double... percentages) {
 		double total = 0;
