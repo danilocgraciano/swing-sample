@@ -97,11 +97,6 @@ public class UnitTableModel extends TableModel<Unit> {
 	}
 
 	@Override
-	public Long getTotalPages() {
-		return getTotalPages(getTotalItens());
-	}
-
-	@Override
 	public Long getTotalItens() {
 		return service.count();
 	}

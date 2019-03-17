@@ -13,14 +13,15 @@ public class Table extends JTable {
 	public Table(TableModel model) {
 		super(model);
 		this.model = model;
+		this.getTableHeader().setReorderingAllowed(false);
 	}
 
 	public void load(Long page, int orderColumn, String order) {
 		this.model.load(page, orderColumn, order);
 	}
 
-	public Long getTotalPages() {
-		return this.model.getTotalPages();
+	public Long getTotalPages(Long totalItens) {
+		return this.model.getTotalPages(totalItens);
 	}
 
 	public Long getTotalItens() {

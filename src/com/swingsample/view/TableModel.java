@@ -11,8 +11,6 @@ public abstract class TableModel<E> extends AbstractTableModel {
 
 	public abstract void load(Long page, int orderColumn, String order);
 
-	public abstract Long getTotalPages();
-
 	public abstract Long getTotalItens();
 
 	public Long getTotalPages(Long count) {
