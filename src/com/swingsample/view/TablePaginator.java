@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,6 +32,9 @@ public class TablePaginator extends JPanel {
 	private JPanel rightPanel;
 
 	private JLabel lblShowingItens;
+
+	private int orderColumn = -1;
+	private String order = "";
 
 	public Long getActualPage() {
 		return page;
@@ -69,7 +74,7 @@ public class TablePaginator extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					table.load(getFirstPage());
+					table.load(getFirstPage(), orderColumn, order);
 					getTxtPage().setText(String.valueOf(getActualPage()));
 					refresh();
 				}
@@ -86,7 +91,7 @@ public class TablePaginator extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					table.load(getPreviousPage());
+					table.load(getPreviousPage(), orderColumn, order);
 					getTxtPage().setText(String.valueOf(getActualPage()));
 					refresh();
 				}
@@ -123,7 +128,7 @@ public class TablePaginator extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					table.load(getNextPage());
+					table.load(getNextPage(), orderColumn, order);
 					getTxtPage().setText(String.valueOf(getActualPage()));
 					refresh();
 				}
@@ -139,7 +144,7 @@ public class TablePaginator extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					table.load(getLastPage());
+					table.load(getLastPage(), orderColumn, order);
 					getTxtPage().setText(String.valueOf(getActualPage()));
 					refresh();
 				}
@@ -164,21 +169,20 @@ public class TablePaginator extends JPanel {
 	}
 
 	public void refresh() {
-		
+
 		Long totalPages = table.getTotalPages();
 		if (totalPages < getActualPage())
 			getPreviousPage();
 
-		table.load(getActualPage());
+		table.load(getActualPage(), orderColumn, order);
 		getTxtPage().setText(String.valueOf(getActualPage()));
 		getLblTotal().setText(String.valueOf(table.getTotalPages()));
-		
+
 		updateShowItemLabel();
 
-		
 	}
-	
-	private void updateShowItemLabel(){
+
+	private void updateShowItemLabel() {
 		String start = String.valueOf(1 + table.getOffset(getActualPage()));
 		String finish = String.valueOf(table.getPageSize());
 		String total = String.valueOf(table.getTotalItens());
@@ -197,13 +201,32 @@ public class TablePaginator extends JPanel {
 	public TablePaginator(Table table) {
 
 		this.table = table;
+
+		this.table.getTableHeader().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int col = TablePaginator.this.table.columnAtPoint(e.getPoint());
+				if (orderColumn == col) {
+					if (order.equals(OrderColumn.ASC))
+						order = OrderColumn.DESC;
+					else
+						order = OrderColumn.ASC;
+				}
+				if (order.isEmpty()) {
+					order = OrderColumn.ASC;
+				}
+				orderColumn = col;
+				refresh();
+			}
+		});
+
 		setLayout(new BorderLayout());
 		add(getLeftPanel(), BorderLayout.WEST);
 		add(getRightPanel(), BorderLayout.EAST);
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				table.load(getFirstPage());
+				table.load(getFirstPage(), orderColumn, order);
 				refresh();
 			}
 		});

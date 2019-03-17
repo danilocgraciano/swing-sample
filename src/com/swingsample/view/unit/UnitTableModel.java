@@ -1,11 +1,13 @@
 package com.swingsample.view.unit;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.swingsample.entity.Unit;
 import com.swingsample.service.UnitService;
 import com.swingsample.service.impl.UnitServiceImpl;
+import com.swingsample.view.OrderColumn;
 import com.swingsample.view.TableModel;
 
 @SuppressWarnings("serial")
@@ -15,9 +17,11 @@ public class UnitTableModel extends TableModel<Unit> {
 	private static final int DESCRIPTION = 1;
 
 	private List<Unit> data;
-	private String[] columns = { "ID", "Descrição" };
+	private List<OrderColumn> columns;
 
 	private UnitService service;
+
+	private OrderColumn orderedColumn;
 
 	public UnitTableModel() {
 		service = new UnitServiceImpl();
@@ -26,7 +30,7 @@ public class UnitTableModel extends TableModel<Unit> {
 
 	@Override
 	public int getColumnCount() {
-		return columns.length;
+		return getColumns().size();
 	}
 
 	@Override
@@ -36,7 +40,8 @@ public class UnitTableModel extends TableModel<Unit> {
 
 	@Override
 	public String getColumnName(int column) {
-		return columns[column];
+
+		return getColumns().get(column).getTitle();
 	}
 
 	public void addRow(Unit... units) {
@@ -64,13 +69,7 @@ public class UnitTableModel extends TableModel<Unit> {
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 
-		// switch (columnIndex) {
-		// case ID:
-		// return false;
-		// case DESCRIPTION:
-		// return true;
-		// }
-		return false;
+		return getColumns().get(columnIndex).isEditable();
 	}
 
 	@Override
@@ -97,9 +96,14 @@ public class UnitTableModel extends TableModel<Unit> {
 		return null;
 	}
 
-	public void load(Long page) {
+	public void load(Long page, int orderColumn, String order) {
 
-		List<Unit> aux = service.findAll(getLimit(), getOffset(page));
+		List<OrderColumn> orderedColumns = new ArrayList<>();
+		if (orderColumn != -1) {
+			orderedColumn = getOrderedColumn(orderColumn, order);
+			orderedColumns.add(orderedColumn);
+		}
+		List<Unit> aux = service.findAll(getLimit(), getOffset(page), orderedColumns);
 		removeAllRows();
 		addRow(aux.toArray(new Unit[aux.size()]));
 	}
@@ -116,10 +120,20 @@ public class UnitTableModel extends TableModel<Unit> {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (data.isEmpty()) {
-			return Object.class;
+		return getColumns().get(columnIndex).getColumnClass();
+	}
+
+	@Override
+	public List<OrderColumn> getColumns() {
+		if (columns == null) {
+			columns = new LinkedList<>();
+			columns.add(new OrderColumn("ID", "id", Long.class, false));
+
+			OrderColumn description = new OrderColumn("Descrição", "description", String.class, false);
+			description.setOrder(OrderColumn.ASC);
+			columns.add(description);
 		}
-		return getValueAt(0, columnIndex).getClass();
+		return columns;
 	}
 
 }

@@ -6,6 +6,7 @@ import com.swingsample.dao.UnitDao;
 import com.swingsample.dao.impl.UnitDaoImpl;
 import com.swingsample.entity.Unit;
 import com.swingsample.service.UnitService;
+import com.swingsample.view.OrderColumn;
 
 public class UnitServiceImpl implements UnitService {
 
@@ -33,6 +34,11 @@ public class UnitServiceImpl implements UnitService {
 	@Override
 	public List<Unit> findAll(Integer limit, Integer offset) {
 		return dao.findAll(limit, offset);
+	}
+
+	@Override
+	public List<Unit> findAll(Integer limit, Integer offset, List<OrderColumn> listOrder) {
+		return dao.findAll(limit, offset, listOrder);
 	}
 
 	@Override

@@ -13,8 +13,8 @@ public class Table extends JTable {
 		this.model = model;
 	}
 
-	public void load(Long page) {
-		this.model.load(page);
+	public void load(Long page, int orderColumn, String order) {
+		this.model.load(page, orderColumn, order);
 	}
 
 	public Long getTotalPages() {
@@ -32,8 +32,8 @@ public class Table extends JTable {
 	public Integer getPageSize() {
 		return this.model.getLimit();
 	}
-	
-	public Object get(int rowIndex){
+
+	public Object get(int rowIndex) {
 		return this.model.get(rowIndex);
 	}
 

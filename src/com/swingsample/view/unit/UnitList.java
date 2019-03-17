@@ -66,7 +66,6 @@ public class UnitList extends JPanel {
 	private Table getTable() {
 		if (table == null) {
 			table = new Table(new UnitTableModel());
-			table.setAutoCreateRowSorter(true);
 			table.setColumnsWidth(getWidth(), 10, 90);
 		}
 		return table;

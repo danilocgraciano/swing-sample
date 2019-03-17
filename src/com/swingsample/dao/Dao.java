@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.swingsample.entity.BaseEntity;
+import com.swingsample.view.OrderColumn;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class Dao<T extends BaseEntity> {
@@ -51,11 +52,29 @@ public abstract class Dao<T extends BaseEntity> {
 	}
 
 	public List<T> findAll(Integer limit, Integer offset) {
+		return findAll(limit, offset, null);
+	}
+
+	public List<T> findAll(Integer limit, Integer offset, List<OrderColumn> listOrder) {
 
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
 		Root<T> rootQuery = criteriaQuery.from(clazz);
 		CriteriaQuery<T> all = criteriaQuery.select(rootQuery);
+
+		if (listOrder != null) {
+			for (OrderColumn tableColumn : listOrder) {
+
+				if (tableColumn.getOrder() != null) {
+					if (tableColumn.getOrder().equals(OrderColumn.ASC))
+						criteriaQuery.orderBy(builder.asc(rootQuery.get(tableColumn.getName())));
+
+					if (tableColumn.getOrder().equals(OrderColumn.DESC))
+						criteriaQuery.orderBy(builder.desc(rootQuery.get(tableColumn.getName())));
+				}
+			}
+		}
+
 		TypedQuery<T> allQuery = manager.createQuery(all);
 
 		if (limit != null && offset != null) {
