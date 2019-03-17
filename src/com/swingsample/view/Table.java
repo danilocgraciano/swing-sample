@@ -1,9 +1,11 @@
 package com.swingsample.view;
 
+import java.util.List;
+
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
-@SuppressWarnings({ "serial", "rawtypes" })
+@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
 public class Table extends JTable {
 
 	private TableModel model;
@@ -37,15 +39,16 @@ public class Table extends JTable {
 		return this.model.get(rowIndex);
 	}
 
-	public void setColumnsWidth(int tablePreferredWidth, double... percentages) {
-		double total = 0;
-		for (int i = 0; i < this.getColumnModel().getColumnCount(); i++) {
-			total += percentages[i];
-		}
+	public void setColumnsWidth(int tablePreferredWidth) {
 
+		List<OrderColumn> columns = this.model.getColumns();
+		double total = 0;
+		for (OrderColumn orderColumn : columns) {
+			total += orderColumn.getSize();
+		}
 		for (int i = 0; i < this.getColumnModel().getColumnCount(); i++) {
 			TableColumn column = this.getColumnModel().getColumn(i);
-			column.setPreferredWidth((int) (tablePreferredWidth * (percentages[i] / total)));
+			column.setPreferredWidth((int) (tablePreferredWidth * (columns.get(i).getSize() / total)));
 		}
 	}
 

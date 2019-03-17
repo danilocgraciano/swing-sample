@@ -16,11 +16,14 @@ public class OrderColumn {
 
 	private String order;
 
-	public OrderColumn(String title, String name, Class columnClass, boolean editable) {
+	private double size;
+
+	public OrderColumn(String title, String name, Class columnClass, boolean editable, double size) {
 		this.name = name;
 		this.title = title;
 		this.columnClass = columnClass;
 		this.editable = editable;
+		this.size = size;
 	}
 
 	public String getName() {
@@ -45,6 +48,10 @@ public class OrderColumn {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public double getSize() {
+		return this.size;
 	}
 
 }

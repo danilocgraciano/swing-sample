@@ -44,4 +44,32 @@ public abstract class TableModel<E> extends AbstractTableModel {
 
 	}
 
+	@Override
+	public int getColumnCount() {
+		return getColumns().size();
+	}
+
+	@Override
+	public String getColumnName(int column) {
+
+		return getColumns().get(column).getTitle();
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+		return getColumns().get(columnIndex).isEditable();
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return getColumns().get(columnIndex).getColumnClass();
+	}
+
+	public abstract void addRow(E[] units);
+
+	public abstract void removeAllRows();
+
+	public abstract void removeRow(int rowIndex);
+
 }

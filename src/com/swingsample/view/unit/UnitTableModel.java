@@ -29,21 +29,11 @@ public class UnitTableModel extends TableModel<Unit> {
 	}
 
 	@Override
-	public int getColumnCount() {
-		return getColumns().size();
-	}
-
-	@Override
 	public int getRowCount() {
 		return data.size();
 	}
 
 	@Override
-	public String getColumnName(int column) {
-
-		return getColumns().get(column).getTitle();
-	}
-
 	public void addRow(Unit... units) {
 
 		for (Unit unit : units) {
@@ -53,23 +43,20 @@ public class UnitTableModel extends TableModel<Unit> {
 		this.fireTableDataChanged();
 	}
 
+	@Override
 	public void removeAllRows() {
 		this.data.clear();
 	}
 
+	@Override
 	public void removeRow(int rowIndex) {
 		this.data.remove(rowIndex);
 		this.fireTableRowsDeleted(rowIndex, rowIndex);
 	}
 
+	@Override
 	public Unit get(int rowIndex) {
 		return this.data.get(rowIndex);
-	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-
-		return getColumns().get(columnIndex).isEditable();
 	}
 
 	@Override
@@ -96,6 +83,7 @@ public class UnitTableModel extends TableModel<Unit> {
 		return null;
 	}
 
+	@Override
 	public void load(Long page, int orderColumn, String order) {
 
 		List<OrderColumn> orderedColumns = new ArrayList<>();
@@ -119,17 +107,12 @@ public class UnitTableModel extends TableModel<Unit> {
 	}
 
 	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return getColumns().get(columnIndex).getColumnClass();
-	}
-
-	@Override
 	public List<OrderColumn> getColumns() {
 		if (columns == null) {
 			columns = new LinkedList<>();
-			columns.add(new OrderColumn("ID", "id", Long.class, false));
+			columns.add(new OrderColumn("#", "id", Long.class, false, 10));
 
-			OrderColumn description = new OrderColumn("Descrição", "description", String.class, false);
+			OrderColumn description = new OrderColumn("Descrição", "description", String.class, false, 90);
 			description.setOrder(OrderColumn.ASC);
 			columns.add(description);
 		}
