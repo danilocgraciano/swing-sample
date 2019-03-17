@@ -164,15 +164,21 @@ public class TablePaginator extends JPanel {
 	}
 
 	public void refresh() {
-
-		if (page > table.getTotalPages())
-			page = getLastPage();
+		
+		Long totalPages = table.getTotalPages();
+		if (totalPages < getActualPage())
+			getPreviousPage();
 
 		table.load(getActualPage());
 		getTxtPage().setText(String.valueOf(getActualPage()));
-		lblTotal = null;
-		getLblTotal();
+		getLblTotal().setText(String.valueOf(table.getTotalPages()));
+		
+		updateShowItemLabel();
 
+		
+	}
+	
+	private void updateShowItemLabel(){
 		String start = String.valueOf(1 + table.getOffset(getActualPage()));
 		String finish = String.valueOf(table.getPageSize());
 		String total = String.valueOf(table.getTotalItens());
